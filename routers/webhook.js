@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var dondeBot = require('../bot/aDonde');
+var winston = require('winston');
 
 
 // Adds support for GET requests to our webhook
@@ -18,7 +19,7 @@ router.get('/', (req, res) => {
     // Checks the mode and token sent is correct
     if (mode === 'subscribe' && token === VERIFY_TOKEN) {
       // Responds with the challenge token from the request
-      console.log('WEBHOOK_VERIFIED');
+      winston.info("Webhook verified correctly");
       res.status(200).send(challenge);
     } else {
       // Responds with '403 Forbidden' if verify tokens do not match
@@ -38,19 +39,15 @@ router.post("/", function(req, res){
     // Iterate over each entry
     // There may be multiple if batched
     data.entry.forEach(function(pageEntry) {
-
       // Iterate over each messaging event
       pageEntry.messaging.forEach(function(messagingEvent) {
-        console.log(messagingEvent);
-
-        // if (messagingEvent.message) {
-        //   dondeBot.receivedMessage(messagingEvent);
-        // } else if (messagingEvent.postback) {
-        //   dondeBot.receivedPostback(messagingEvent);
-        // } else {
-        //   console.log("Webhook received unknown messagingEvent: ", messagingEvent);
-        // }
-
+        if (messagingEvent.message) {
+          dondeBot.receivedMessage(messagingEvent);
+        } else if (messagingEvent.postback) {
+          dondeBot.receivedPostback(messagingEvent);
+        } else {
+          winston.warn("Webhook received unknown messagingEvent: " + messagingEvent)
+        }
       });
     });
 
