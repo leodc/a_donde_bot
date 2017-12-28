@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var dondeBot = require('../bot/aDonde');
 
 
 // Adds support for GET requests to our webhook
@@ -29,24 +30,32 @@ router.get('/', (req, res) => {
 
 // Creates the endpoint for our webhook
 router.post("/", function(req, res){
-  var body = req.body;
+  var data = req.body;
 
   // Checks this is an event from a page subscription
-  if (body.object === 'page') {
+  if (data.object == 'page') {
 
-    // Iterates over each entry - there may be multiple if batched
-    body.entry.forEach(function(entry) {
-      // Gets the message. entry.messaging is an array, but
-      // will only ever contain one message, so we get index 0
-      var webhookEvent = entry.messaging[0];
-      console.log(webhookEvent);
+    // Iterate over each entry
+    // There may be multiple if batched
+    data.entry.forEach(function(pageEntry) {
+
+      // Iterate over each messaging event
+      pageEntry.messaging.forEach(function(messagingEvent) {
+        console.log(messagingEvent);
+
+        // if (messagingEvent.message) {
+        //   dondeBot.receivedMessage(messagingEvent);
+        // } else if (messagingEvent.postback) {
+        //   dondeBot.receivedPostback(messagingEvent);
+        // } else {
+        //   console.log("Webhook received unknown messagingEvent: ", messagingEvent);
+        // }
+
+      });
     });
 
-    // Returns a '200 OK' response to all requests
-    res.status(200).send('EVENT_RECEIVED');
-  } else {
-    // Returns a '404 Not Found' if event is not from a page subscription
-    res.sendStatus(404);
+
+    res.sendStatus(200);
   }
 });
 

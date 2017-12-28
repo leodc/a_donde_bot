@@ -3,48 +3,77 @@
 var PAGE_ACCESS_TOKEN = "EAAW8CvCVE1ABAHElFZAyiRvs7x2Woj12OCpT7tZBNOnBIoZCOl95HUjnu48cX5K73yZBabUk4bzQCI9aVTEGUpKMB7QVNOLF1srQZBesFZAUkvwt15j1GJQVMssqxtZAcHAAVBDZAYTP8SDSmjDZB92EKcEm381ZB1PQZCDvIYWZBP0mZAQZDZD";
 var PAGE_SIZE = 10;
 
-// Handles messages events
-function handleMessage(sender_psid, received_message) {
-  var response;
 
-  // Check if the message contains text
-  if (received_message.text) {
-    // Create the payload for a basic text message
-    response = {
-      "text": `You sent the message: "${received_message.text}". Now send me an image!`
-    }
-  }
+function receivedPostback(event) {
+    var senderID = event.sender.id;
 
-  // Sends the response message
-  callSendAPI(sender_psid, response);
+    var payload = event.postback.payload;
+
+    console.log(payload)
+
+    // if( payload.includes("payload_explore_more_") ){
+    //     var data = payload.split("payload_explore_more_")[1].split(",");
+    //
+    //     var offset = data[0];
+    //     var lat = data[1];
+    //     var lng = data[2];
+    //     var query = data[3];
+    //
+    //     if( isNaN(offset) || isNaN(lat) || isNaN(lng) ){
+    //         //error
+    //         sendErrorMessage(senderID);
+    //         console.error("Error getting params for foursquare", offset, lat, lng);
+    //         return -1;
+    //     }
+    //
+    //
+    //     exploreFoursquare(senderID, null, {lat: lat, lng:lng}, Number(offset), query);
+    // }else if(payload === "payload_start"){
+    //     sayHi(senderID);
+    // }
 }
 
-// Handles messaging_postbacks events
-function handlePostback(sender_psid, received_postback) {
 
+function receivedMessage(event) {
+    var senderID = event.sender.id;
+    var message = event.message;
+
+    console.log(message);
+
+    // You may get a text or attachment but not both
+    // var messageAttachments = message.attachments;
+    // var messageText = message.text;
+    //
+    // console.log("message", message);
+    //
+    // if(messageAttachments){
+    //
+    //     console.log("messageAttachments", messageAttachments);
+    //
+    //     for( var i = 0; i < messageAttachments.length; i++){
+    //         console.log(messageAttachments[i].payload);
+    //
+    //         switch( messageAttachments[i].type ){
+    //             case "image":
+    //                 if( messageAttachments[i].payload.sticker_id === 369239263222822 ){
+    //                     sayHi(senderID);
+    //                 }
+    //                 break;
+    //
+    //             case "location":
+    //                 handleLocation(senderID, messageAttachments[i]);
+    //                 break;
+    //         }
+    //     }
+    //
+    // } else if (messageText) {
+    //     console.log("messageText", messageText);
+    //     sayHi(senderID);
+    // }
 }
 
-// Sends response messages via the Send API
-function callSendAPI(sender_psid, response) {
-  // Construct the message body
-  var request_body = {
-    "recipient": {
-      "id": sender_psid
-    },
-    "message": response
-  }
 
-  // Send the HTTP request to the Messenger Platform
-  request({
-    "uri": "https://graph.facebook.com/v2.6/me/messages",
-    "qs": { "access_token": PAGE_ACCESS_TOKEN },
-    "method": "POST",
-    "json": request_body
-  }, function(err, res, body){
-    if (!err) {
-      console.log('message sent!')
-    } else {
-      console.error("Unable to send message:" + err);
-    }
-  });
-}
+module.exports = {
+    receivedPostback: receivedPostback,
+    receivedMessage: receivedMessage
+};

@@ -23,6 +23,7 @@
   "homepage": "https://github.com/leodc/a_donde_bot#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "crypto": "^1.0.1",
     "express": "^4.16.2",
     "request": "^2.83.0"
   }
