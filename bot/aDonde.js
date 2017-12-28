@@ -44,19 +44,19 @@ function receivedMessage(event) {
   if(messageAttachments){
     winston.info({"messageAttachments": messageAttachments});
 
-    for( var i = 0; i < messageAttachments.length; i++){
-      switch( messageAttachments[i].type ){
-        case "image":
-        if( messageAttachments[i].payload.sticker_id === 369239263222822 ){
-          sayHi(senderID);
-        }
-        break;
-
-        case "location":
-        handleLocation(senderID, messageAttachments[i]);
-        break;
-      }
-    }
+    // for( var i = 0; i < messageAttachments.length; i++){
+    //   switch( messageAttachments[i].type ){
+    //     case "image":
+    //     if( messageAttachments[i].payload.sticker_id === 369239263222822 ){
+    //       sayHi(senderID);
+    //     }
+    //     break;
+    //
+    //     case "location":
+    //     handleLocation(senderID, messageAttachments[i]);
+    //     break;
+    //   }
+    // }
 
   } else if (messageText) {
     winston.info({"messageText": messageText});
