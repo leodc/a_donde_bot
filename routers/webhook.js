@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
   // Checks if a token and mode is in the query string of the request
   if (mode && token) {
     // Checks the mode and token sent is correct
-    if (mode === 'subscribe' && token === process.env.A_DONDE_VALIDATION_TOCKEN) {
+    if (mode === 'subscribe' && token === process.env.A_DONDE_VALIDATION_TOKEN) {
       // Responds with the challenge token from the request
       winston.info("Webhook verified correctly");
       res.status(200).send(challenge);
