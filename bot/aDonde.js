@@ -2,6 +2,8 @@ var request = require('request');
 var winston = require('winston');
 var foursquare = require("./foursquare");
 
+var PAGE_SIZE = 10;
+
 function receivedPostback(event) {
   // var senderID = event.sender.id;
   // var payload = event.postback.payload;
