@@ -46,27 +46,57 @@ function receivedMessage(event) {
 
     switch( attachments.type ){
       case "image":
-        if( attachments.payload.sticker_id === 369239263222822 ){
-          sayHello(senderID);
-        }
-        break;
+      if( attachments.payload.sticker_id === 369239263222822 ){
+        sayHello(senderID);
+      }
+      break;
 
       case "location":
-        var latLng = {
-          lat: attachments.payload.coordinates.lat,
-          lng: attachments.payload.coordinates.long
+      var latLng = {
+        lat: attachments.payload.coordinates.lat,
+        lng: attachments.payload.coordinates.long
+      };
+
+      foursquare.explore(latLng, 0, "none", function (error, body) {
+        if(error){
+          winston.error({"Error exploring foursquare": error});
+          return;
+        }
+
+        var recomendedPlaces = body.response.groups[0];
+        // var addSimilarButton = (PAGE_SIZE - 1) < recomendedPlaces.items.length;
+        // 9 3 f
+        // 9 9 t ??
+        // 9 15 t
+
+
+        var elements = [];
+        var venue;
+        // last element -> "find more"
+        for( var i = 0; i < PAGE_SIZE; i++ ){
+          venue = recomendedPlaces.items[i].venue;
+          elements.push( buildFoursquareMessage(venue, startLatLng) );
+        }
+
+        var message = {
+          "recipient":{
+            "id": senderID
+          },
+          "message":{
+            "attachment":{
+              "type":"template",
+              "payload":{
+                "template_type":"generic",
+                "elements": elements
+              }
+            }
+          }
         };
 
-        foursquare.explore(latLng, 0, "none", function (error, body) {
-          if(error){
-            winston.error({"Error exploring foursquare": error});
-            return;
-          }
+        callSendAPI(message);
+      });
 
-          winston.info(body);
-        });
-        
-        break;
+      break;
     }
 
   } else if (messageText) {
@@ -108,6 +138,37 @@ function sayHello(senderID){
   setTimeout(function(){
     sendTextMessage(senderID, "Para iniciar solo comparte tu ubicación conmigo :) !");
   }, 100);
+}
+
+function buildFoursquareMessage(venue, startLatLng){
+  var mapsUrl =  "https://www.google.com.mx/maps/dir/";
+  mapsUrl += startLatLng.lat + "," + startLatLng.lng + "/";
+  mapsUrl += venue.location.lat + "," + venue.location.lng + "/";
+
+  var query = "";
+  for( var i = 0; i < venue.categories.length; i++ ){
+    if( i > 0 )
+    query += " ";
+
+    query += venue.categories[i].name;
+  }
+
+
+  var message = {
+    "title": venue.name,
+    "item_url": venue.url,
+    "image_url": venue.photos.groups[0].items[0].prefix + "original" + venue.photos.groups[0].items[0].suffix,
+    "subtitle": "Rating: " + venue.rating + " | " + venue.location.distance + " m | " + venue.price.currency + " " + venue.price.message,
+    "buttons":[
+      {
+        "type": "web_url",
+        "title": "¿Cómo llegar?",
+        "url": mapsUrl
+      }
+    ]
+  };
+
+  return message;
 }
 
 
