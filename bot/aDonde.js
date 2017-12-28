@@ -61,7 +61,8 @@ function receivedMessage(event) {
   } else if (messageText) {
     winston.info({"messageText": messageText});
 
-    sendTextMessage(senderID, "Hola ! yo te puedo ayudar a encontrar lugares cercanos a ti, perfectos para llegar en bicicleta o caminando :) !");
+    sendTextMessage(senderID, "¡ Hola ! yo te puedo ayudar a encontrar lugares de interes cercanos a ti, perfectos para llegar en bicicleta o caminando :)");
+    sendTextMessage(senderID, "Para iniciar solo comparte tu ubicación conmigo :) !");
   }
 }
 
