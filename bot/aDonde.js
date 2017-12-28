@@ -1,8 +1,6 @@
-var winston = require('winston');
 var request = require('request');
-
-var PAGE_SIZE = 10;
-
+var winston = require('winston');
+var foursquare = require("./foursquare");
 
 function receivedPostback(event) {
   // var senderID = event.sender.id;
@@ -54,8 +52,20 @@ function receivedMessage(event) {
         break;
 
       case "location":
-        winston.info(attachments)
-        // handleLocation(senderID, messageAttachments[i]);
+        var latLng = {
+          lat: attachments.payload.coordinates.lat,
+          lng: attachments.payload.coordinates.long
+        };
+
+        foursquare.explore(latLng, 0, "none", function (error, body) {
+          if(error){
+            winston.error({"Error exploring foursquare": error});
+            return;
+          }
+
+          winston.info(body);
+        });
+        
         break;
     }
 
