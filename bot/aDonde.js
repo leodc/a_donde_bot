@@ -46,9 +46,9 @@ function receivedMessage(event) {
 
     var attachments = messageAttachments[0];
 
-    switch( messageAttachments[i].type ){
+    switch( attachments.type ){
       case "image":
-        if( messageAttachments[i].payload.sticker_id === 369239263222822 ){
+        if( attachments.payload.sticker_id === 369239263222822 ){
           sayHello(senderID);
         }
         break;
