@@ -1,5 +1,5 @@
 var winston = require('winston');
-// var request = require('request');
+var request = require('request');
 
 var PAGE_SIZE = 10;
 
