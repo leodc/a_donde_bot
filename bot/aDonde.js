@@ -44,75 +44,39 @@ function receivedMessage(event) {
   if(messageAttachments){
     winston.info({"messageAttachments": messageAttachments});
 
-    // for( var i = 0; i < messageAttachments.length; i++){
-    //   switch( messageAttachments[i].type ){
-    //     case "image":
-    //     if( messageAttachments[i].payload.sticker_id === 369239263222822 ){
-    //       sayHi(senderID);
-    //     }
-    //     break;
-    //
-    //     case "location":
-    //     handleLocation(senderID, messageAttachments[i]);
-    //     break;
-    //   }
-    // }
+    var attachments = messageAttachments[0];
+
+    switch( messageAttachments[i].type ){
+      case "image":
+        if( messageAttachments[i].payload.sticker_id === 369239263222822 ){
+          sayHello(senderID);
+        }
+        break;
+
+      case "location":
+        winston.info(attachments)
+        // handleLocation(senderID, messageAttachments[i]);
+        break;
+    }
 
   } else if (messageText) {
     winston.info({"messageText": messageText});
-
-    sendTextMessage(senderID, "¡ Hola ! yo te puedo ayudar a encontrar lugares de interes cercanos a ti, perfectos para llegar en bicicleta o caminando :)");
-
-    setTimeout(function(){
-      sendTextMessage(senderID, "Para iniciar solo comparte tu ubicación conmigo :) !");
-    }, 100);
+    sayHello(senderID);
   }
 }
 
 function sendTextMessage(recipientId, messageText) {
-    var messageData = {
-        recipient: {
-            id: recipientId
-        },
-        message: {
-            text: messageText
-        }
-    };
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: messageText
+    }
+  };
 
-    callSendAPI(messageData);
+  callSendAPI(messageData);
 }
-
-
-// function sendMessage(senderID, message){
-//
-//   // get username
-//   request({
-//     uri: 'https://graph.facebook.com/v2.6/' + senderID + '?access_token=' + process.env.A_DONDE_VALIDATION_TOCKEN,
-//     method: 'GET',
-//   }, function(error, response, data){
-//     var name = error ? ":)":JSON.parse(data)["first_name"];
-//
-//     sendTextMessage(senderID, "Hola " + name + "! yo te puedo ayudar a encontrar lugares cercanos a ti, perfectos para llegar en bicicleta o caminando.");
-//
-//     var messageData = {
-//       recipient: {
-//         id: senderID
-//       },
-//       message: {
-//         text: "Para empezar solo necesito que me compartas tu ubicación :).",
-//         quick_replies: [
-//           {
-//             "content_type":"location"
-//           }
-//         ]
-//       }
-//     };
-//
-//     callSendAPI(messageData);
-//   });
-//
-// }
-
 
 function callSendAPI(messageData) {
   request({
@@ -125,6 +89,15 @@ function callSendAPI(messageData) {
       winston.error({"Unable to send message": error, "status": response.statusCode, "body": body});
     }
   });
+}
+
+
+function sayHello(senderID){
+  sendTextMessage(senderID, "¡ Hola ! yo te puedo ayudar a encontrar lugares de interes cercanos a ti, perfectos para llegar en bicicleta o caminando :)");
+
+  setTimeout(function(){
+    sendTextMessage(senderID, "Para iniciar solo comparte tu ubicación conmigo :) !");
+  }, 100);
 }
 
 
