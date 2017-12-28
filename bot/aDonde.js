@@ -54,51 +54,51 @@ function receivedMessage(event) {
       break;
 
       case "location":
-      var latLng = {
-        lat: attachments.payload.coordinates.lat,
-        lng: attachments.payload.coordinates.long
-      };
-
-      foursquare.explore(latLng, 0, "none", function (error, body) {
-        if(error){
-          winston.error({"Error exploring foursquare": error});
-          return;
-        }
-
-        var recomendedPlaces = body.response.groups[0];
-        // var addSimilarButton = (PAGE_SIZE - 1) < recomendedPlaces.items.length;
-        // 9 3 f
-        // 9 9 t ??
-        // 9 15 t
-
-
-        var elements = [];
-        var venue;
-        // last element -> "find more"
-        for( var i = 0; i < PAGE_SIZE; i++ ){
-          venue = recomendedPlaces.items[i].venue;
-          elements.push( buildFoursquareMessage(venue, startLatLng) );
-        }
-
-        var message = {
-          "recipient":{
-            "id": senderID
-          },
-          "message":{
-            "attachment":{
-              "type":"template",
-              "payload":{
-                "template_type":"generic",
-                "elements": elements
-              }
-            }
-          }
+        var latLng = {
+          lat: attachments.payload.coordinates.lat,
+          lng: attachments.payload.coordinates.long
         };
 
-        callSendAPI(message);
-      });
+        foursquare.explore(latLng, 0, "none", function (error, body) {
+          if(error){
+            winston.error({"Error exploring foursquare": error});
+            return;
+          }
 
-      break;
+          var recomendedPlaces = body.response.groups[0];
+          // var addSimilarButton = (PAGE_SIZE - 1) < recomendedPlaces.items.length;
+          // 9 3 f
+          // 9 9 t ??
+          // 9 15 t
+
+
+          var elements = [];
+          var venue;
+          // last element -> "find more"
+          for( var i = 0; i < PAGE_SIZE; i++ ){
+            venue = recomendedPlaces.items[i].venue;
+            elements.push( buildFoursquareMessage(venue, latLng) );
+          }
+
+          var message = {
+            "recipient":{
+              "id": senderID
+            },
+            "message":{
+              "attachment":{
+                "type":"template",
+                "payload":{
+                  "template_type":"generic",
+                  "elements": elements
+                }
+              }
+            }
+          };
+
+          callSendAPI(message);
+        });
+
+        break;
     }
 
   } else if (messageText) {
