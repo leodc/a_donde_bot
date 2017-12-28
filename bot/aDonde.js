@@ -42,7 +42,7 @@ function receivedMessage(event) {
   var messageText = message.text;
 
   if(messageAttachments){
-    warn.info({"messageAttachments": messageAttachments});
+    winston.info({"messageAttachments": messageAttachments});
 
     for( var i = 0; i < messageAttachments.length; i++){
       switch( messageAttachments[i].type ){
@@ -59,7 +59,7 @@ function receivedMessage(event) {
     }
 
   } else if (messageText) {
-    warn.info({"messageText": messageText});
+    winston.info({"messageText": messageText});
 
     sendTextMessage(senderID, "Hola ! yo te puedo ayudar a encontrar lugares cercanos a ti, perfectos para llegar en bicicleta o caminando :) !");
   }
