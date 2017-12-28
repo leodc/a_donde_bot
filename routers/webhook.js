@@ -43,7 +43,7 @@ router.post("/", function(req, res){
         } else if (messagingEvent.postback) {
           dondeBot.receivedPostback(messagingEvent);
         } else {
-          winston.warn("Webhook received unknown messagingEvent: " + messagingEvent)
+          winston.warn({"Webhook received unknown messagingEvent": messagingEvent});
         }
       });
     });
