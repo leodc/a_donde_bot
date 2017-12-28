@@ -39,7 +39,7 @@ function receivedMessage(event) {
 
   // You may get a text or attachment but not both
   var messageAttachments = message.attachments;
-  var messageText = message.text;)
+  var messageText = message.text;
 
   if(messageAttachments){
     warn.info({"messageAttachments": messageAttachments});
