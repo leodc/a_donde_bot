@@ -6,9 +6,6 @@ var winston = require('winston');
 
 // Adds support for GET requests to our webhook
 router.get('/', (req, res) => {
-  // Your verify token. Should be a random string.
-  var VERIFY_TOKEN = "a_donde_bottono"
-
   // Parse the query params
   var mode = req.query['hub.mode'];
   var token = req.query['hub.verify_token'];
@@ -17,12 +14,12 @@ router.get('/', (req, res) => {
   // Checks if a token and mode is in the query string of the request
   if (mode && token) {
     // Checks the mode and token sent is correct
-    if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+    if (mode === 'subscribe' && token === process.env.A_DONDE_VALIDATION_TOCKEN) {
       // Responds with the challenge token from the request
       winston.info("Webhook verified correctly");
       res.status(200).send(challenge);
     } else {
-      // Responds with '403 Forbidden' if verify tokens do not match
+      winston.error("Tokens do not match");
       res.sendStatus(403);
     }
   }

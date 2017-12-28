@@ -42,7 +42,7 @@ function verifyRequestSignature(req, res, buf) {
     //var method = elements[0];
     var signatureHash = elements[1];
 
-    var expectedHash = crypto.createHmac('sha1', "d0626a34fc0ed819980955611dce97a3" ).update(buf).digest('hex');
+    var expectedHash = crypto.createHmac('sha1', process.env.A_DONDE_APP_SECRET ).update(buf).digest('hex');
     if (signatureHash != expectedHash) {
       winston.configure({
         exitOnError: true
