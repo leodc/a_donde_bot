@@ -1,0 +1,32 @@
+{
+  "name": "a_donde_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node server.js",
+    "web": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "8.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leodc/a_donde_bot.git"
+  },
+  "author": "Leonel Castañeda <leodcastaneda@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leodc/a_donde_bot/issues"
+  },
+  "homepage": "https://github.com/leodc/a_donde_bot#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "crypto": "^1.0.1",
+    "express": "^4.16.2",
+    "node-foursquare-venues": "^1.1.0",
+    "request": "^2.83.0",
+    "winston": "^3.0.0-rc1"
+  }
+}
