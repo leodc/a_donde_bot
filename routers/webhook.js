@@ -5,7 +5,7 @@ var winston = require('winston');
 
 
 // Adds support for GET requests to our webhook
-router.get('/', (req, res) => {
+router.get('/', function(req, res){
   // Parse the query params
   var mode = req.query['hub.mode'];
   var token = req.query['hub.verify_token'];
@@ -38,8 +38,16 @@ router.post("/", function(req, res){
     data.entry.forEach(function(pageEntry) {
       // Iterate over each messaging event
       pageEntry.messaging.forEach(function(messagingEvent) {
+        winston.info({"message": messagingEvent});
+        
         if (messagingEvent.message) {
-          dondeBot.receivedMessage(messagingEvent);
+          
+          if(messagingEvent.message.quick_reply){
+            dondeBot.handleQuickReply(messagingEvent);
+          } else if(messagingEvent.message.text){
+            dondeBot.receivedMessage(messagingEvent);
+          }
+          
         } else if (messagingEvent.postback) {
           dondeBot.receivedPostback(messagingEvent);
         } else {

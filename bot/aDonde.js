@@ -4,11 +4,16 @@ var foursquare = require("./foursquare");
 
 var PAGE_SIZE = 10;
 
+
+function handleQuickReply(event){
+  winston.info({"handlePayload": event});
+}
+
 function receivedPostback(event) {
   // var senderID = event.sender.id;
   // var payload = event.postback.payload;
 
-  winston.info(event);
+  winston.info({"receivedPostback": event});
 
   // if( payload.includes("payload_explore_more_") ){
   //     var data = payload.split("payload_explore_more_")[1].split(",");
@@ -48,7 +53,7 @@ function receivedMessage(event) {
 
     switch( attachments.type ){
       case "image":
-      if( attachments.payload.sticker_id === 369239263222822 ){
+      if( attachments.payload.sticker_id === 369239263222822 ){ // like sticker
         sayHello(senderID);
       }
       break;
@@ -107,6 +112,7 @@ function receivedMessage(event) {
   }
 }
 
+
 function sendTextMessage(recipientId, messageText) {
   var messageData = {
     recipient: {
@@ -135,11 +141,29 @@ function callSendAPI(messageData) {
 
 
 function sayHello(senderID){
-  sendTextMessage(senderID, "¡ Hola ! yo te puedo ayudar a encontrar lugares de interes cercanos a ti, perfectos para llegar en bicicleta o caminando :)");
+  var helloMessage = "¡ Hola ! yo te puedo ayudar a encontrar lugares de interes cercanos a ti, perfectos para llegar en bicicleta o caminando :).\n\nPara iniciar solo comparte tu ubicación conmigo o usa alguno de los botones debajo:";
 
-  setTimeout(function(){
-    sendTextMessage(senderID, "Para iniciar solo comparte tu ubicación conmigo :) !");
-  }, 100);
+  var message = {
+    "recipient":{
+      "id": senderID
+    },
+    "message":{
+      "text": helloMessage,
+      "quick_replies":[
+        {
+          "content_type":"location"
+        },
+        {
+          "content_type": "text",
+          "title": "Conectar con un amigo",
+          "payload": "SEND_USER_SHARE"
+        }
+      ]
+    }
+  };
+  
+  winston.info("Sending hello");
+  callSendAPI(message);
 }
 
 function buildFoursquareMessage(venue, startLatLng){
@@ -176,5 +200,6 @@ function buildFoursquareMessage(venue, startLatLng){
 
 module.exports = {
   receivedPostback: receivedPostback,
-  receivedMessage: receivedMessage
+  receivedMessage: receivedMessage,
+  handleQuickReply: handleQuickReply
 };
